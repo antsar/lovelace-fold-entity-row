@@ -223,12 +223,6 @@ class FoldEntityRow extends LitElement {
       }, 100);
     }
 
-    const el = this.shadowRoot.querySelector("#measure") as HTMLElement;
-    this.observer = new ResizeObserver(() => {
-      this.maxheight = el.scrollHeight;
-    });
-    this.observer.observe(el);
-
     findParentCard(this).then((result) => {
       if (!result && this._config.mute !== true) {
         console.info(
@@ -308,15 +302,12 @@ class FoldEntityRow extends LitElement {
       <div
         id="items"
         ?open=${this.open}
+        class="${ this.open ? 'expanded' : 'collapsed' }"
         aria-hidden="${String(!this.open)}"
         aria-expanded="${String(this.open)}"
-        style=${`padding-left: ${this._config.padding}px; max-height: ${this.height}px;`}
+        style=${`padding-left: ${this._config.padding}px;`}
       >
-        <div id="measure">
-          ${this.renderRows
-            ? this.rows?.map((row) => html`<div>${row}</div>`)
-            : ""}
-        </div>
+        ${ this.rows?.map((row) => html`<div>${row}</div>`) }
       </div>
     `;
   }
@@ -360,25 +351,18 @@ class FoldEntityRow extends LitElement {
         padding: 0;
         margin: 0;
         overflow: hidden;
-        transition: max-height 0.2s ease-in-out;
         height: 100%;
         overflow: clip visible;
       }
 
-      #measure {
-        overflow: clip visible;
-      }
-      #measure > * {
-        margin: 8px 0;
-        overflow: clip visible;
-      }
-      #measure > *:last-child {
-        margin-bottom: 0;
+      #items.expanded{
+        display: block;
       }
 
-      #measure > div * {
-        overflow: clip visible;
+      #items.collapsed {
+        display: none;
       }
+
       #head > *:first-child {
         overflow: clip visible;
       }
